@@ -1,8 +1,12 @@
 // TODO: npm WARN deprecated request@2.88.2: request has been deprecated, see https://github.com/request/request/issues/3142
 // TODO: require 😑, import 😊
 const express = require("express");
+const connectDB = require("./config/db");
 
 const app = express();
+
+// Connect database
+connectDB();
 
 app.get("/", (req, res) => res.send("API Running"));
 
