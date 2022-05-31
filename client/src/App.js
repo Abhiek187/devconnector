@@ -1,5 +1,10 @@
 import { Fragment, useEffect } from "react";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Outlet,
+  Route,
+  Routes,
+} from "react-router-dom";
 import Navbar from "./components/layout/Navbar";
 import Landing from "./components/layout/Landing";
 import Register from "./components/auth/Register";
@@ -38,10 +43,17 @@ const App = () => {
       <Router>
         <Fragment>
           <Navbar />
-          <section className="container">
-            <Alert />
-            <Routes>
-              <Route path="/" element={<Landing />} />
+          <Alert />
+          <Routes>
+            {/* Don't wrap the landing page in a container to fill the background image */}
+            <Route path="/" element={<Landing />} />
+            <Route
+              element={
+                <section className="container">
+                  <Outlet />
+                </section>
+              }
+            >
               <Route path="/register" element={<Register />} />
               <Route path="/login" element={<Login />} />
               <Route path="/profiles" element={<Profiles />} />
@@ -75,8 +87,8 @@ const App = () => {
                 element={<PrivateRoute component={Post} />}
               />
               <Route path="/*" element={<NotFound />} />
-            </Routes>
-          </section>
+            </Route>
+          </Routes>
         </Fragment>
       </Router>
     </Provider>

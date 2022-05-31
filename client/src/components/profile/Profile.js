@@ -38,7 +38,8 @@ const Profile = ({ getProfileById, profile: { profile, loading }, auth }) => {
             <ProfileAbout profile={profile} />
             <div className="profile-exp bg-white p-2">
               <h2 className="text-primary">Experience</h2>
-              {profile.experience.length > 0 ? (
+              {profile.experience !== undefined &&
+              profile.experience.length > 0 ? (
                 <Fragment>
                   {profile.experience.map((experience) => (
                     <ProfileExperience
@@ -53,7 +54,8 @@ const Profile = ({ getProfileById, profile: { profile, loading }, auth }) => {
             </div>
             <div className="profile-edu bg-white p-2">
               <h2 className="text-primary">Education</h2>
-              {profile.education.length > 0 ? (
+              {profile.education !== undefined &&
+              profile.education.length > 0 ? (
                 <Fragment>
                   {profile.education.map((education) => (
                     <ProfileEducation
@@ -66,9 +68,10 @@ const Profile = ({ getProfileById, profile: { profile, loading }, auth }) => {
                 <h4>No education credentials</h4>
               )}
             </div>
-            {profile.githubusername.length > 0 && (
-              <ProfileGitHub username={profile.githubusername} />
-            )}
+            {profile.githubusername !== undefined &&
+              profile.githubusername.length > 0 && (
+                <ProfileGitHub username={profile.githubusername} />
+              )}
           </div>
         </Fragment>
       )}
