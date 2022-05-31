@@ -66,7 +66,7 @@ const Profile = ({ getProfileById, profile: { profile, loading }, auth }) => {
                 <h4>No education credentials</h4>
               )}
             </div>
-            {profile.githubusername !== undefined && (
+            {profile.githubusername.length > 0 && (
               <ProfileGitHub username={profile.githubusername} />
             )}
           </div>
