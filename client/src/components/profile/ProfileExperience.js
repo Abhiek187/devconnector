@@ -1,15 +1,14 @@
 import PropTypes from "prop-types";
-import Moment from "react-moment";
+import formatDate from "../../utils/formatDate";
 
 const ProfileExperience = ({
-  experience: { company, title, location, current, to, from, description },
+  experience: { company, title, current, to, from, description },
 }) => {
   return (
     <div>
       <h3 className="text-dark">{company}</h3>
       <p>
-        <Moment format="YYYY/MM/DD">{from}</Moment> -{" "}
-        {current ? " Now" : <Moment format="YYYY/MM/DD">{to}</Moment>}
+        {formatDate(from)} - {current ? " Now" : formatDate(to)}
       </p>
       <p>
         <strong>Position: </strong> {title}
