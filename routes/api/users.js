@@ -5,6 +5,7 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import config from "config";
 import { check, validationResult } from "express-validator";
+import normalize from "normalize-url";
 
 import User from "../../models/User.js";
 
@@ -42,11 +43,14 @@ router.post(
       }
 
       // Get user's gravatar
-      const avatar = gravatar.url(email, {
-        s: "200", // size
-        r: "pg", // rating
-        d: "mp", // default (mystery person)
-      });
+      const avatar = normalize(
+        gravatar.url(email, {
+          s: "200", // size
+          r: "pg", // rating
+          d: "mp", // default (mystery person)
+        }),
+        { forceHttps: true }
+      );
 
       user = new User({
         name,
