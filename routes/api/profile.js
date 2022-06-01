@@ -1,13 +1,14 @@
-const express = require("express");
-const axios = require("axios");
-const config = require("config");
+import express from "express";
+import axios from "axios";
+import config from "config";
 const router = express.Router();
-const auth = require("../../middleware/auth");
-const { check, validationResult } = require("express-validator");
+import auth from "../../middleware/auth.js";
+import { check, validationResult } from "express-validator";
+import normalize from "normalize-url";
 
-const Profile = require("../../models/Profile");
-const User = require("../../models/User");
-const Post = require("../../models/Post");
+import Profile from "../../models/Profile.js";
+import User from "../../models/User.js";
+import Post from "../../models/Post.js";
 
 // @route   GET api/profile/me
 // @desc    Get current user's profile
@@ -48,42 +49,34 @@ router.post(
       return res.status(400).json({ errors: errors.array() });
     }
 
-    const {
-      company,
-      website,
-      location,
-      bio,
-      status,
-      githubusername,
-      skills,
-      youtube,
-      facebook,
-      twitter,
-      instagram,
-      linkedin,
-    } = req.body;
-
     // Build profile object
-    const profileFields = {};
-    profileFields.user = req.user.id;
-    if (company !== undefined) profileFields.company = company;
-    if (website !== undefined) profileFields.website = website;
-    if (location !== undefined) profileFields.location = location;
-    if (bio !== undefined) profileFields.bio = bio;
-    if (status.length > 0) profileFields.status = status;
-    if (githubusername !== undefined)
-      profileFields.githubusername = githubusername;
-    if (skills.length > 0) {
+    const profileFields = { user: req.user.id };
+    const mainfields = [
+      "company",
+      "location",
+      "bio",
+      "status",
+      "githubusername",
+    ];
+
+    mainfields.forEach((field) => {
+      if (req.body[field] !== undefined) profileFields[field] = req.body[field];
+    });
+
+    if (req.body.website !== undefined) {
+      profileFields.website = normalize(website, { forceHttps: true });
+    }
+    if (req.body.skills !== undefined) {
       profileFields.skills = skills.split(",").map((skill) => skill.trim());
     }
 
     // Build social object
-    profileFields.social = {};
-    if (youtube !== undefined) profileFields.social.youtube = youtube;
-    if (twitter !== undefined) profileFields.social.twitter = twitter;
-    if (facebook !== undefined) profileFields.social.facebook = facebook;
-    if (linkedin !== undefined) profileFields.social.linkedin = linkedin;
-    if (instagram !== undefined) profileFields.social.instagram = instagram;
+    const socialfields = ["youtube", "twitter", "instagram", "linkedin"];
+    profileFields.social = socialfields.reduce((acc, field) => {
+      if (req.body[field] !== undefined)
+        acc[field] = normalize(req.body[field], { forceHttps: true });
+      return acc;
+    }, {});
 
     try {
       let profile = await Profile.findOne({ user: req.user.id });
@@ -324,4 +317,4 @@ router.get("/github/:username", async (req, res) => {
   }
 });
 
-module.exports = router;
+export default router;

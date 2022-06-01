@@ -1,7 +1,11 @@
-// TODO: require 😑, import 😊
-const express = require("express");
-const connectDB = require("./config/db");
-const path = require("path");
+import express from "express";
+import connectDB from "./config/db.js";
+import path from "path";
+
+import users from "./routes/api/users.js";
+import auth from "./routes/api/auth.js";
+import profile from "./routes/api/profile.js";
+import posts from "./routes/api/posts.js";
 
 const app = express();
 
@@ -12,10 +16,10 @@ connectDB();
 app.use(express.json({ extended: false }));
 
 // Define routes
-app.use("/api/users", require("./routes/api/users"));
-app.use("/api/auth", require("./routes/api/auth"));
-app.use("/api/profile", require("./routes/api/profile"));
-app.use("/api/posts", require("./routes/api/posts"));
+app.use("/api/users", users);
+app.use("/api/auth", auth);
+app.use("/api/profile", profile);
+app.use("/api/posts", posts);
 
 // Serve static assets in production
 if (process.env.NODE_ENV === "production") {

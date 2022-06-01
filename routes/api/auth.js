@@ -1,12 +1,12 @@
-const express = require("express");
+import express from "express";
 const router = express.Router();
-const bcrypt = require("bcryptjs");
-const auth = require("../../middleware/auth");
-const jwt = require("jsonwebtoken");
-const config = require("config");
-const { check, validationResult } = require("express-validator");
+import bcrypt from "bcryptjs";
+import auth from "../../middleware/auth.js";
+import jwt from "jsonwebtoken";
+import config from "config";
+import { check, validationResult } from "express-validator";
 
-const User = require("../../models/User");
+import User from "../../models/User.js";
 
 // @route   GET api/auth
 // @desc    Test route
@@ -74,9 +74,9 @@ router.post(
       );
     } catch (err) {
       console.error(err.message);
-      res.status(500).send("Server errror");
+      res.status(500).send("Server error");
     }
   }
 );
 
-module.exports = router;
+export default router;
