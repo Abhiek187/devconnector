@@ -34,4 +34,4 @@ npm install --prefix client # client
 
 You will need to create a MongoDB database with collections for the posts, profiles, and users. The JWT secret can be any random string. And the GitHub token can be obtained by following [these directions](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token).
 
-4. Run the Node server and React app concurrently using `npm run dev`, which will open the project at `http://localhost:3000`. Both can be stopped by pressing CTRL-C.
+4. Run the Node server and React app concurrently using `npm run dev`, which will open the project at `http://localhost:3000` while the server listens at `http://localhost:5000`. Both can be stopped by pressing CTRL-C.
