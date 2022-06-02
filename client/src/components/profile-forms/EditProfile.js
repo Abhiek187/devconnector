@@ -31,23 +31,28 @@ const EditProfile = ({
     getCurrentProfile();
 
     setFormData({
-      company: loading || profile.company.length === 0 ? "" : profile.company,
-      website: loading || profile.website.length === 0 ? "" : profile.website,
+      company: loading || profile.company === undefined ? "" : profile.company,
+      website: loading || profile.website === undefined ? "" : profile.website,
       location:
-        loading || profile.location.length === 0 ? "" : profile.location,
-      status: loading || profile.status.length === 0 ? "" : profile.status,
+        loading || profile.location === undefined ? "" : profile.location,
+      status: loading || profile.status === undefined ? "" : profile.status,
       skills:
-        loading || profile.skills.length === 0 ? "" : profile.skills.join(","),
+        loading || profile.skills === undefined ? "" : profile.skills.join(","),
       githubusername:
-        loading || profile.githubusername.length === 0
+        loading || profile.githubusername === undefined
           ? ""
           : profile.githubusername,
-      bio: loading || profile.bio.length === 0 ? "" : profile.bio,
-      twitter: loading || !profile.social ? "" : profile.social.twitter,
-      facebook: loading || !profile.social ? "" : profile.social.facebook,
-      linkedin: loading || !profile.social ? "" : profile.social.linkedin,
-      youtube: loading || !profile.social ? "" : profile.social.youtube,
-      instagram: loading || !profile.social ? "" : profile.social.instagram,
+      bio: loading || profile.bio === undefined ? "" : profile.bio,
+      twitter:
+        loading || profile.social === undefined ? "" : profile.social.twitter,
+      facebook:
+        loading || profile.social === undefined ? "" : profile.social.facebook,
+      linkedin:
+        loading || profile.social === undefined ? "" : profile.social.linkedin,
+      youtube:
+        loading || profile.social === undefined ? "" : profile.social.youtube,
+      instagram:
+        loading || profile.social === undefined ? "" : profile.social.instagram,
     });
   }, [loading, getCurrentProfile]);
 
@@ -76,10 +81,9 @@ const EditProfile = ({
 
   return (
     <Fragment>
-      <h1 className="large text-primary">Create Your Profile</h1>
+      <h1 className="large text-primary">Edit Your Profile</h1>
       <p className="lead">
-        <i className="fas fa-user"></i> Let's get some information to make your
-        profile stand out
+        <i className="fas fa-user"></i> Add some changes to your profile
       </p>
       <small>* = required field</small>
       <form className="form" onSubmit={(e) => onSubmit(e)}>

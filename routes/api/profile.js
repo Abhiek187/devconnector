@@ -60,21 +60,24 @@ router.post(
     ];
 
     mainfields.forEach((field) => {
-      if (req.body[field] !== undefined) profileFields[field] = req.body[field];
+      if (req.body[field].length > 0) profileFields[field] = req.body[field];
     });
 
-    if (req.body.website !== undefined) {
-      profileFields.website = normalize(website, { forceHttps: true });
+    if (req.body.website.length > 0) {
+      profileFields.website = normalize(req.body.website, { forceHttps: true });
     }
-    if (req.body.skills !== undefined) {
-      profileFields.skills = skills.split(",").map((skill) => skill.trim());
+    if (req.body.skills.length > 0) {
+      profileFields.skills = req.body.skills
+        .split(",")
+        .map((skill) => skill.trim());
     }
 
     // Build social object
     const socialfields = ["youtube", "twitter", "instagram", "linkedin"];
     profileFields.social = socialfields.reduce((acc, field) => {
-      if (req.body[field] !== undefined)
+      if (req.body[field] !== undefined && req.body[field].length > 0) {
         acc[field] = normalize(req.body[field], { forceHttps: true });
+      }
       return acc;
     }, {});
 
