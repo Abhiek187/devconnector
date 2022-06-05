@@ -1,22 +1,21 @@
 import { Fragment, useEffect } from "react";
 import { Link } from "react-router-dom";
-import PropTypes from "prop-types";
-import { connect } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Spinner from "../layout/Spinner";
 import DashbardActions from "./DashboardActions";
 import Experience from "./Experience";
 import Education from "./Education";
 import { getCurrentProfile, deleteAccount } from "../../actions/profile";
 
-const Dashboard = ({
-  getCurrentProfile,
-  deleteAccount,
-  auth: { user },
-  profile: { profile, loading },
-}) => {
+const Dashboard = () => {
+  const { user } = useSelector((state) => state.auth);
+  const { profile, loading } = useSelector((state) => state.profile);
+  const dispatch = useDispatch();
+
   useEffect(() => {
-    getCurrentProfile();
-  }, [getCurrentProfile]);
+    // Fetch the logged in user's profile when the page loads
+    dispatch(getCurrentProfile());
+  }, [dispatch]);
 
   return loading && profile === null ? (
     <Spinner />
@@ -33,7 +32,10 @@ const Dashboard = ({
           <Education education={profile.education} />
 
           <div className="my-2">
-            <button className="btn btn-danger" onClick={() => deleteAccount()}>
+            <button
+              className="btn btn-danger"
+              onClick={() => dispatch(deleteAccount())}
+            >
               <i className="fas fa-user-minus"></i> Delete My Account
             </button>
           </div>
@@ -50,18 +52,4 @@ const Dashboard = ({
   );
 };
 
-Dashboard.propTypes = {
-  getCurrentProfile: PropTypes.func.isRequired,
-  deleteAccount: PropTypes.func.isRequired,
-  auth: PropTypes.object.isRequired,
-  profile: PropTypes.object.isRequired,
-};
-
-const mapStateToProps = (state) => ({
-  auth: state.auth,
-  profile: state.profile,
-});
-
-export default connect(mapStateToProps, { getCurrentProfile, deleteAccount })(
-  Dashboard
-);
+export default Dashboard;

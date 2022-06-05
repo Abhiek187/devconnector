@@ -1,8 +1,9 @@
 import { Link, Navigate } from "react-router-dom";
-import { connect } from "react-redux";
-import PropTypes from "prop-types";
+import { useSelector } from "react-redux";
 
-const Landing = ({ isAuthenticated }) => {
+const Landing = () => {
+  const { isAuthenticated } = useSelector((state) => state.auth);
+
   if (isAuthenticated) {
     // When logged in, redirect from the home page to the dashboard
     return <Navigate to="/dashboard" />;
@@ -31,12 +32,4 @@ const Landing = ({ isAuthenticated }) => {
   );
 };
 
-Landing.propTypes = {
-  isAuthenticated: PropTypes.bool,
-};
-
-const mapStateToProps = (state) => ({
-  isAuthenticated: state.auth.isAuthenticated,
-});
-
-export default connect(mapStateToProps)(Landing);
+export default Landing;

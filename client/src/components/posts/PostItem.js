@@ -1,18 +1,17 @@
 import { Fragment } from "react";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
-import { connect } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addLike, removeLike, deletePost } from "../../actions/post";
 import formatDate from "../../utils/formatDate";
 
 const PostItem = ({
-  addLike,
-  removeLike,
-  deletePost,
-  auth,
   post: { _id, text, name, avatar, user, likes, comments, date },
   showActions,
 }) => {
+  const auth = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
+
   return (
     <div className="post bg-white p-1 my-1">
       <div>
@@ -27,7 +26,7 @@ const PostItem = ({
         {showActions && (
           <Fragment>
             <button
-              onClick={(e) => addLike(_id)}
+              onClick={() => dispatch(addLike(_id))}
               type="button"
               className="btn btn-light"
             >
@@ -35,7 +34,7 @@ const PostItem = ({
               {likes.length > 0 && <span>{likes.length}</span>}
             </button>
             <button
-              onClick={(e) => removeLike(_id)}
+              onClick={() => dispatch(removeLike(_id))}
               type="button"
               className="btn btn-light"
             >
@@ -49,7 +48,7 @@ const PostItem = ({
             </Link>
             {!auth.loading && user === auth.user._id && (
               <button
-                onClick={(e) => deletePost(_id)}
+                onClick={() => dispatch(deletePost(_id))}
                 type="button"
                 className="btn btn-danger"
               >
@@ -69,17 +68,7 @@ PostItem.defaultProps = {
 
 PostItem.propTypes = {
   post: PropTypes.object.isRequired,
-  auth: PropTypes.object.isRequired,
-  addLike: PropTypes.func.isRequired,
-  removeLike: PropTypes.func.isRequired,
-  deletePost: PropTypes.func.isRequired,
   showActions: PropTypes.bool,
 };
 
-const mapStateToProps = (state) => ({
-  auth: state.auth,
-});
-
-export default connect(mapStateToProps, { addLike, removeLike, deletePost })(
-  PostItem
-);
+export default PostItem;

@@ -1,10 +1,9 @@
 import { Fragment, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import PropTypes from "prop-types";
-import { connect } from "react-redux";
+import { useDispatch } from "react-redux";
 import { createProfile } from "../../actions/profile";
 
-const CreateProfile = ({ createProfile }) => {
+const CreateProfile = () => {
   const [formData, setFormData] = useState({
     company: "",
     website: "",
@@ -22,6 +21,7 @@ const CreateProfile = ({ createProfile }) => {
 
   const [displaySocialInputs, toggleSocialInputs] = useState(false);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const {
     company,
@@ -43,7 +43,7 @@ const CreateProfile = ({ createProfile }) => {
 
   const onSubmit = (e) => {
     e.preventDefault();
-    createProfile(formData, navigate);
+    dispatch(createProfile(formData, navigate));
   };
 
   return (
@@ -221,8 +221,4 @@ const CreateProfile = ({ createProfile }) => {
   );
 };
 
-CreateProfile.propTypes = {
-  createProfile: PropTypes.func.isRequired,
-};
-
-export default connect(null, { createProfile })(CreateProfile);
+export default CreateProfile;

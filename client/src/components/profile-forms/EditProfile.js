@@ -1,14 +1,9 @@
 import { Fragment, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import PropTypes from "prop-types";
-import { connect } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { createProfile, getCurrentProfile } from "../../actions/profile";
 
-const EditProfile = ({
-  profile: { profile, loading },
-  createProfile,
-  getCurrentProfile,
-}) => {
+const EditProfile = () => {
   const [formData, setFormData] = useState({
     company: "",
     website: "",
@@ -26,10 +21,13 @@ const EditProfile = ({
 
   const [displaySocialInputs, toggleSocialInputs] = useState(false);
   const navigate = useNavigate();
+  const { profile, loading } = useSelector((state) => state.profile);
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    getCurrentProfile();
+    dispatch(getCurrentProfile());
 
+    // Populate the form with all the saved entries
     setFormData({
       company: loading || profile.company === undefined ? "" : profile.company,
       website: loading || profile.website === undefined ? "" : profile.website,
@@ -54,7 +52,7 @@ const EditProfile = ({
       instagram:
         loading || profile.social === undefined ? "" : profile.social.instagram,
     });
-  }, [loading, getCurrentProfile]);
+  }, [loading, dispatch]);
 
   const {
     company,
@@ -76,7 +74,7 @@ const EditProfile = ({
 
   const onSubmit = (e) => {
     e.preventDefault();
-    createProfile(formData, navigate, true);
+    dispatch(createProfile(formData, navigate, true));
   };
 
   return (
@@ -253,16 +251,4 @@ const EditProfile = ({
   );
 };
 
-EditProfile.propTypes = {
-  createProfile: PropTypes.func.isRequired,
-  getCurrentProfile: PropTypes.func.isRequired,
-  profile: PropTypes.object.isRequired,
-};
-
-const mapStateToProps = (state) => ({
-  profile: state.profile,
-});
-
-export default connect(mapStateToProps, { createProfile, getCurrentProfile })(
-  EditProfile
-);
+export default EditProfile;

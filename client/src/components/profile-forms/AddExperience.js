@@ -1,10 +1,9 @@
 import { Fragment, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import PropTypes from "prop-types";
-import { connect } from "react-redux";
+import { useDispatch } from "react-redux";
 import { addExperience } from "../../actions/profile";
 
-const AddExperience = ({ addExperience }) => {
+const AddExperience = () => {
   const [formData, setFormData] = useState({
     company: "",
     title: "",
@@ -17,6 +16,7 @@ const AddExperience = ({ addExperience }) => {
 
   const [toDateDisabled, toggleDisabled] = useState(false);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const { company, title, location, from, to, current, description } = formData;
 
@@ -35,7 +35,7 @@ const AddExperience = ({ addExperience }) => {
         className="form"
         onSubmit={(e) => {
           e.preventDefault();
-          addExperience(formData, navigate);
+          dispatch(addExperience(formData, navigate));
         }}
       >
         <div className="form-group">
@@ -120,8 +120,4 @@ const AddExperience = ({ addExperience }) => {
   );
 };
 
-AddExperience.propTypes = {
-  addExperience: PropTypes.func.isRequired,
-};
-
-export default connect(null, { addExperience })(AddExperience);
+export default AddExperience;

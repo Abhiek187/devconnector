@@ -1,22 +1,17 @@
-import PropTypes from "prop-types";
-import { connect } from "react-redux";
+import { useSelector } from "react-redux";
 
-const Alert = ({ alerts }) => (
-  <div className="alert-wrapper">
-    {alerts.map((alert) => (
-      <div key={alert.id} className={`alert alert-${alert.alertType}`}>
-        {alert.msg}
-      </div>
-    ))}
-  </div>
-);
+const Alert = () => {
+  const alerts = useSelector((state) => state.alert);
 
-Alert.propTypes = {
-  alerts: PropTypes.array.isRequired,
+  return (
+    <div className="alert-wrapper">
+      {alerts.map((alert) => (
+        <div key={alert.id} className={`alert alert-${alert.alertType}`}>
+          {alert.msg}
+        </div>
+      ))}
+    </div>
+  );
 };
 
-const mapStateToProps = (state) => ({
-  alerts: state.alert,
-});
-
-export default connect(mapStateToProps)(Alert);
+export default Alert;

@@ -1,10 +1,9 @@
 import { Fragment, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import PropTypes from "prop-types";
-import { connect } from "react-redux";
+import { useDispatch } from "react-redux";
 import { addEducation } from "../../actions/profile";
 
-const AddEducation = ({ addEducation }) => {
+const AddEducation = () => {
   const [formData, setFormData] = useState({
     school: "",
     degree: "",
@@ -17,6 +16,7 @@ const AddEducation = ({ addEducation }) => {
 
   const [toDateDisabled, toggleDisabled] = useState(false);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const { school, degree, fieldofstudy, from, to, current, description } =
     formData;
@@ -36,7 +36,7 @@ const AddEducation = ({ addEducation }) => {
         className="form"
         onSubmit={(e) => {
           e.preventDefault();
-          addEducation(formData, navigate);
+          dispatch(addEducation(formData, navigate));
         }}
       >
         <div className="form-group">
@@ -121,8 +121,4 @@ const AddEducation = ({ addEducation }) => {
   );
 };
 
-AddEducation.propTypes = {
-  addEducation: PropTypes.func.isRequired,
-};
-
-export default connect(null, { addEducation })(AddEducation);
+export default AddEducation;

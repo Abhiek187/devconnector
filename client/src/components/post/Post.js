@@ -1,6 +1,5 @@
 import { Fragment, useEffect } from "react";
-import PropTypes from "prop-types";
-import { connect } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Link, useParams } from "react-router-dom";
 import Spinner from "../layout/Spinner";
 import PostItem from "../posts/PostItem";
@@ -8,12 +7,14 @@ import CommentForm from "./CommentForm";
 import CommentItem from "./CommentItem";
 import { getPost } from "../../actions/post";
 
-const Post = ({ getPost, post: { post, loading } }) => {
+const Post = () => {
   const { id } = useParams();
+  const { post, loading } = useSelector((state) => state.post);
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    getPost(id);
-  }, [getPost, id]);
+    dispatch(getPost(id));
+  }, [dispatch, id]);
 
   return loading || post === null ? (
     <Spinner />
@@ -33,13 +34,4 @@ const Post = ({ getPost, post: { post, loading } }) => {
   );
 };
 
-Post.propTypes = {
-  getPost: PropTypes.func.isRequired,
-  post: PropTypes.object.isRequired,
-};
-
-const mapStateToProps = (state) => ({
-  post: state.post,
-});
-
-export default connect(mapStateToProps, { getPost })(Post);
+export default Post;
