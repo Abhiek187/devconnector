@@ -33,7 +33,7 @@ router.post(
     const { name, email, password } = req.body;
 
     try {
-      // See if the user exists
+      // Check if another user used the same email
       let user = await User.findOne({ email });
 
       if (user !== null) {
@@ -42,7 +42,7 @@ router.post(
           .json({ errors: [{ msg: "User already exists" }] });
       }
 
-      // Get user's gravatar
+      // Get user's gravatar using their email
       const avatar = normalize(
         gravatar.url(email, {
           s: "200", // size
@@ -76,7 +76,7 @@ router.post(
         config.get("jwtSecret"),
         { expiresIn: 3600 },
         (err, token) => {
-          if (err) throw err;
+          if (err !== null) throw err;
           res.json({ token });
         }
       );

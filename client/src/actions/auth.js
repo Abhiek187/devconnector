@@ -42,6 +42,7 @@ export const register = (formData) => async (dispatch) => {
     const errors = err.response.data.errors;
 
     if (errors !== undefined) {
+      // Show all errors
       errors.forEach((error) => dispatch(setAlert(error.msg, "danger")));
     }
 

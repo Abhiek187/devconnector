@@ -25,17 +25,27 @@ import PrivateRoute from "./components/routing/PrivateRoute";
 import { Provider } from "react-redux";
 import store from "./store";
 import { loadUser } from "./actions/auth";
+import { LOGOUT } from "./actions/types";
 import setAuthToken from "./utils/setAuthToken";
 
 import "./App.css";
 
-if (localStorage.token !== undefined) {
-  setAuthToken(localStorage.token);
-}
-
 const App = () => {
   useEffect(() => {
+    // Check for token in LS when the app first runs
+    if (localStorage.token !== undefined) {
+      // If there is a token, set axios headers for all requests
+      setAuthToken(localStorage.token);
+    }
+    // Try to fetch a user, if no token or invalid token we will get a 401 response from our API
     store.dispatch(loadUser());
+
+    // Log user out from all tabs if they log out in one tab
+    window.addEventListener("storage", () => {
+      if (localStorage.token === undefined) {
+        store.dispatch({ type: LOGOUT });
+      }
+    });
   }, []);
 
   return (

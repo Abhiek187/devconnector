@@ -15,6 +15,7 @@ import Post from "../../models/Post.js";
 // @access  Private
 router.get("/me", auth, async (req, res) => {
   try {
+    // Add the name and avatar fields from the user model
     const profile = await Profile.findOne({ user: req.user.id }).populate(
       "user",
       ["name", "avatar"]
@@ -49,60 +50,55 @@ router.post(
       return res.status(400).json({ errors: errors.array() });
     }
 
-    // Build profile object
-    const profileFields = { user: req.user.id };
-    const mainfields = [
-      "company",
-      "location",
-      "bio",
-      "status",
-      "githubusername",
-    ];
+    // Destructure the request
+    const {
+      website,
+      skills,
+      youtube,
+      twitter,
+      instagram,
+      linkedin,
+      facebook,
+      // Spread the rest of the fields we don't need to check
+      ...rest
+    } = req.body;
 
-    mainfields.forEach((field) => {
-      if (req.body[field].length > 0) profileFields[field] = req.body[field];
-    });
+    // Build a profile
+    const profileFields = {
+      user: req.user.id,
+      website:
+        website !== undefined && website.length > 0
+          ? normalize(website, { forceHttps: true })
+          : "",
+      skills:
+        skills !== undefined
+          ? skills.split(",").map((skill) => " " + skill.trim())
+          : [],
+      ...rest,
+    };
 
-    if (req.body.website.length > 0) {
-      profileFields.website = normalize(req.body.website, { forceHttps: true });
+    // Build socialFields object
+    const socialFields = { youtube, twitter, instagram, linkedin, facebook };
+
+    // Normalize social fields to ensure valid URLs
+    for (const [key, value] of Object.entries(socialFields)) {
+      if (value !== undefined && value.length > 0)
+        socialFields[key] = normalize(value, { forceHttps: true });
     }
-    if (req.body.skills.length > 0) {
-      profileFields.skills = req.body.skills
-        .split(",")
-        .map((skill) => skill.trim());
-    }
-
-    // Build social object
-    const socialfields = ["youtube", "twitter", "instagram", "linkedin"];
-    profileFields.social = socialfields.reduce((acc, field) => {
-      if (req.body[field] !== undefined && req.body[field].length > 0) {
-        acc[field] = normalize(req.body[field], { forceHttps: true });
-      }
-      return acc;
-    }, {});
+    // Add to profileFields
+    profileFields.social = socialFields;
 
     try {
-      let profile = await Profile.findOne({ user: req.user.id });
-
-      if (profile !== null) {
-        // Update
-        profile = await Profile.findOneAndUpdate(
-          { user: req.user.id },
-          { $set: profileFields },
-          { new: true }
-        );
-
-        res.json(profile);
-      } else {
-        // Create
-        profile = new Profile(profileFields);
-
-        await profile.save();
-        res.json(profile);
-      }
+      // Use the upsert option (creates new doc if no match is found)
+      const profile = await Profile.findOneAndUpdate(
+        { user: req.user.id }, // filter
+        { $set: profileFields }, // update
+        { new: true, upsert: true, setDefaultsOnInsert: true } // options
+      );
+      return res.json(profile);
     } catch (err) {
       console.error(err.message);
-      res.status(500).send("Server error");
+      return res.status(500).send("Server Error");
     }
   }
 );
@@ -112,6 +108,7 @@ router.post(
 // @access  Public
 router.get("/", async (req, res) => {
   try {
+    // Get all profiles and include the user's name and avatar
     const profiles = await Profile.find().populate("user", ["name", "avatar"]);
     res.json(profiles);
   } catch (err) {
@@ -150,9 +147,9 @@ router.get("/user/:user_id", async (req, res) => {
 // @access  Private
 router.delete("/", auth, async (req, res) => {
   try {
-    // Remove user posts
+    // Remove user posts (one user can have many posts)
     await Post.deleteMany({ user: req.user.id });
-    // Remove profile
+    // Remove profile (one user can only have one profile)
     await Profile.findOneAndDelete({ user: req.user.id });
     // Remove user
     await User.findOneAndDelete({ _id: req.user.id });
@@ -304,6 +301,7 @@ router.delete("/education/:edu_id", auth, async (req, res) => {
 // @access  Public
 router.get("/github/:username", async (req, res) => {
   try {
+    // GitHub API docs: https://docs.github.com/en/rest
     const uri = encodeURI(
       `https://api.github.com/users/${req.params.username}/repos?per_page=5&sort=created:asc`
     );

@@ -43,7 +43,7 @@ router.post(
 // @access  Private
 router.get("/", auth, async (req, res) => {
   try {
-    const posts = await Post.find().sort({ date: -1 });
+    const posts = await Post.find().sort({ date: -1 }); // sort by date in descending order
     res.json(posts);
   } catch (err) {
     console.error(err.message);
@@ -67,6 +67,7 @@ router.get("/:id", auth, async (req, res) => {
     console.error(err.message);
 
     if (err.kind === "ObjectId") {
+      // Not a valid post ID
       return res.status(404).json({ msg: "Post not found" });
     }
 
@@ -85,7 +86,7 @@ router.delete("/:id", auth, async (req, res) => {
       return res.status(404).json({ msg: "Post not found" });
     }
 
-    // Check user
+    // Users can only delete their own posts
     if (post.user.toString() !== req.user.id) {
       return res.status(401).json({ msg: "User not authorized" });
     }
@@ -118,7 +119,7 @@ router.put("/like/:id", auth, async (req, res) => {
       return res.status(400).json({ msg: "Post already liked" });
     }
 
-    post.likes.unshift({ user: req.user.id });
+    post.likes.unshift({ user: req.user.id }); // show most recent likes at the top
     await post.save();
     res.json(post.likes);
   } catch (err) {
@@ -134,7 +135,7 @@ router.put("/unlike/:id", auth, async (req, res) => {
   try {
     const post = await Post.findById(req.params.id);
 
-    // Check if the post has already been liked
+    // Check if the post has been liked
     if (
       post.likes.filter((like) => like.user.toString() === req.user.id)
         .length === 0
@@ -173,6 +174,7 @@ router.post(
       const user = await User.findById(req.user.id).select("-password");
       const post = await Post.findById(req.params.id);
 
+      // Comments share the same schema as posts
       const newComment = new Post({
         text: req.body.text,
         name: user.name,
@@ -197,7 +199,7 @@ router.delete("/comment/:id/:comment_id", auth, async (req, res) => {
   try {
     const post = await Post.findById(req.params.id);
 
-    // Pull out comment
+    // Pull out comment (JS array find, not mongoose find)
     const comment = post.comments.find(
       (comment) => comment.id === req.params.comment_id
     );
@@ -206,7 +208,7 @@ router.delete("/comment/:id/:comment_id", auth, async (req, res) => {
       return res.status(404).json({ msg: "Comment does not exist" });
     }
 
-    // Check user
+    // Users can only delete their own comments
     if (comment.user.toString() !== req.user.id) {
       return res.status(401).json({ msg: "User not authorized" });
     }

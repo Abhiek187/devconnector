@@ -1,3 +1,4 @@
+// Server converted to module to support imports
 import express from "express";
 import connectDB from "./config/db.js";
 import path from "path";
@@ -9,10 +10,10 @@ import posts from "./routes/api/posts.js";
 
 const app = express();
 
-// Connect database
+// Connect to database
 connectDB();
 
-// Initialize middleware
+// Initialize middleware: parse JSON
 app.use(express.json({ extended: false }));
 
 // Define routes
@@ -26,6 +27,7 @@ if (process.env.NODE_ENV === "production") {
   // Set static folder
   app.use(express.static("client/build"));
 
+  // Load index.html upon receiving any GET request (the client will render the rest)
   app.get("*", (req, res) => {
     res.sendFile(path.resolve(__dirname, "client", "build", "index.html"));
   });

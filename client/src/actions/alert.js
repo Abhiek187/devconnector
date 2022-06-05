@@ -11,6 +11,7 @@ export const setAlert =
       payload: { msg, alertType, id },
     });
 
+    // Show the alert for timeout milliseconds
     setTimeout(
       () =>
         dispatch({

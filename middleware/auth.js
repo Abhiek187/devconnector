@@ -12,9 +12,18 @@ export default (req, res, next) => {
 
   // Verify token
   try {
+    /* JWT contains the following data:
+    {
+      "user": {
+        "id": "USER_ID"
+      },
+      "iat": ISSUED_AT_TIME,
+      "exp": EXPIRATION_TIME
+    }
+     */
     const decoded = jwt.verify(token, config.get("jwtSecret"));
     req.user = decoded.user;
-    next();
+    next(); // run the next action
   } catch (err) {
     res.status(401).json({ msg: "Token is not valid" });
   }

@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 
 const Landing = ({ isAuthenticated }) => {
   if (isAuthenticated) {
+    // When logged in, redirect from the home page to the dashboard
     return <Navigate to="/dashboard" />;
   }
 

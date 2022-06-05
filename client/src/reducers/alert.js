@@ -1,6 +1,6 @@
 import { SET_ALERT, REMOVE_ALERT } from "../actions/types";
 
-const initialState = [];
+const initialState = []; // the array acts as a queue of alerts
 
 export default function (state = initialState, action) {
   const { type, payload } = action;

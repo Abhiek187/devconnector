@@ -11,9 +11,9 @@ import {
 
 const initialState = {
   token: localStorage.getItem("token"),
-  isAuthenticated: null,
-  loading: true,
-  user: null,
+  isAuthenticated: null, // initially null, but becomes either true or false
+  loading: true, // true until a reducer is called
+  user: null, // the user object
 };
 
 export default function (state = initialState, action) {

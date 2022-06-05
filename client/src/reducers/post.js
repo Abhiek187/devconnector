@@ -10,8 +10,8 @@ import {
 } from "../actions/types";
 
 const initialState = {
-  posts: [],
-  post: null,
+  posts: [], // all users' posts
+  post: null, // the currently viewed post
   loading: true,
   error: {},
 };

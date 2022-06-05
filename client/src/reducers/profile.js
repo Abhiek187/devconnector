@@ -8,9 +8,9 @@ import {
 } from "../actions/types";
 
 const initialState = {
-  profile: null,
-  profiles: [],
-  repos: [],
+  profile: null, // the currently viewed profile
+  profiles: [], // all users's profiles
+  repos: [], // the user's repos
   loading: true,
   error: {},
 };

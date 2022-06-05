@@ -70,4 +70,5 @@ const mapStateToProps = (state) => ({
   isAuthenticated: state.auth.isAuthenticated,
 });
 
+// connect(mapStateToProps, mapDispatchToProps)
 export default connect(mapStateToProps, { login })(Login);
