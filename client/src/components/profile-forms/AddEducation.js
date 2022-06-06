@@ -69,9 +69,10 @@ const AddEducation = () => {
           />
         </div>
         <div className="form-group">
-          <h4>* From Date</h4>
+          <label htmlFor="from-date">* From Date</label>
           <input
             type="date"
+            id="from-date"
             name="from"
             value={from}
             onChange={(e) => onChange(e)}
@@ -81,21 +82,23 @@ const AddEducation = () => {
           <p>
             <input
               type="checkbox"
+              id="is-current"
               name="current"
               checked={current}
               value={current}
-              onChange={(e) => {
+              onChange={() => {
                 setFormData({ ...formData, current: !current });
                 toggleDisabled(!toDateDisabled);
               }}
-            />{" "}
-            Current School
+            />
+            <label htmlFor="is-current"> Current School</label>
           </p>
         </div>
         <div className="form-group">
-          <h4>To Date</h4>
+          <label htmlFor="to-date">To Date</label>
           <input
             type="date"
+            id="to-date"
             name="to"
             value={to}
             onChange={(e) => onChange(e)}
