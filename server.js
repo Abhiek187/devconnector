@@ -29,7 +29,13 @@ if (process.env.NODE_ENV === "production") {
 
   // Load index.html upon receiving any GET request (the client will render the rest)
   app.get("*", (req, res) => {
-    res.sendFile(path.resolve(__dirname, "client", "build", "index.html"));
+    // Fixes the 404 screen on Heroku since __dirname is not defined
+    if (typeof __dirname === "undefined") {
+      const __dirname = path.dirname(new URL(import.meta.url).pathname);
+      res.sendFile(path.resolve(__dirname, "client", "build", "index.html"));
+    } else {
+      res.sendFile(path.resolve(__dirname, "client", "build", "index.html"));
+    }
   });
 }
 
