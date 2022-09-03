@@ -1,0 +1,3 @@
+# Prevent local modules from overwriting modules in the Docker container
+node_modules
+npm-debug.log
