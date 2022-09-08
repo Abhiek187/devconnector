@@ -12,7 +12,7 @@ This app was created using the MERN stack. It uses JWTs for authentication, Redu
 
 ## Directions
 
-This app is hosted on Heroku at [https://pacific-beyond-32083.herokuapp.com](https://pacific-beyond-32083.herokuapp.com/), or can be run locally using the following steps:
+This app can be run locally using the following steps:
 
 1. [Clone](https://github.com/Abhiek187/devconnector.git) this repo.
 2. Install all the server and client dependencies:
